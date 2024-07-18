@@ -1,0 +1,61 @@
+{% extends 'admin/model/list.html' %}
+
+{% block body %}
+
+{% if has_admin_authorization %}
+<div id="notify">
+</div>
+
+<div class="pull-right">
+    <button class="btn btn-primary" id="update-btn" onclick="updateVecoreStore();">Update vector
+        store</button>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", (event) => {
+        const strifyedResult = localStorage.getItem('result');
+        if (strifyedResult) {
+            const result = JSON.parse(strifyedResult);
+            localStorage.removeItem('result')
+
+            let type = result.type;
+            let msg = result.msg;
+
+            $('#notify').html(`
+                    <div class="alert alert-${type} alert-dismissible" role="alert">
+                        ${msg}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>`
+            );
+        }
+    });
+
+    async function updateVecoreStore() {
+        if (confirm("Are you sure you want to update the vetor store?")) {
+            const btn = document.querySelector('#update-btn');
+            btn.disabled = true;
+
+            const url = "{{ request.host_url }}".concat("/update_vector_store")  // = "http://192.168.1.156:1234/update_vector_store"
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "CREF_TOKEN": "{{ cref_token }}"
+                }
+            });
+
+            const result = await response.json();
+            localStorage.setItem('result', JSON.stringify(result));
+
+            btn.disabled = false;
+            window.location.reload();
+        }
+    }
+</script>
+
+{% endif %}
+
+{{ super() }}
+
+{% endblock body %}

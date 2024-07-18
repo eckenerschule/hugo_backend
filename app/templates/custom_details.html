@@ -1,0 +1,15 @@
+{% extends 'admin/model/details.html' %}
+
+{% block details_search %}
+
+<!-- <div class="pull-right"> -->
+<div style="display: flex; flex-direction: row; align-items: center;">
+    <button class="btn btn-primary" id="update-btn" onclick="window.history.go(-1);"
+        style="height: max-content; margin-top: 10px; padding: 6px 20px; min-width: 100px;">
+        Back
+    </button>
+
+    {{ super() }}
+</div>
+
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+{{ super() }}
+<div class="row-fluid">
+    <div>
+        {% if current_user.is_authenticated %}
+        <h1>Welcome</h1>
+        <p>
+        <h3><label for="quick-nav">Quick Navigation:</label></h3>
+        </p>
+        {% if has_admin_authorization %}
+        <ul id="quick-nav">
+            <li><a href="/admin/chat_historyview/">Chat History</a></li>
+            <li><a href="/admin/exceptionview/">Exception</a></li>
+            <li><a href="/admin/informationview/">Information</a></li>
+            <li><a href="/admin/openaiview/">OpenAI</a></li>
+            <li><a href="/admin/subjectview/">Subject</a></li>
+            <li><a href="/admin/userview/">User</a></li>
+        </ul>
+        {% if log %}
+        <div style="display: block;">
+            <p>
+            <h3><label for="log-area">Log:</label></h3>
+            </p>
+            <textarea id="log-area" rows="10" , style="width: 100%;" readonly>{{ log }}</textarea>
+        </div>
+        {% endif %}
+        {% else %}
+        <ul id="quick-nav">
+            <li><a href="/admin/chat_historyview/">Chat History</a></li>
+            <li><a href="/admin/informationview/">Information</a></li>
+            <li><a href="/admin/subjectview/">Subject</a></li>
+        </ul>
+        {% endif %}
+        {% else %}
+        <form method="POST" action="">
+            {{ form.hidden_tag() if form.hidden_tag }}
+            {% for f in form if f.type != 'CSRFTokenField' %}
+            <div class="form-group">
+                {{ f.label }}<br>
+                {{ f }}
+                {% if f.errors %}
+                <ul>
+                    {% for e in f.errors %}
+                    <li>{{ e }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock body %}
